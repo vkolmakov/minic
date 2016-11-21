@@ -1,3 +1,3 @@
-class ID():
+class ID:
     def __init__(self, id):
         self.id = id

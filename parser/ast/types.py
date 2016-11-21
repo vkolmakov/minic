@@ -1,13 +1,13 @@
-class IntType():
+class IntType:
     def __init__(self):
         pass
 
 
-class FloatType():
+class FloatType:
     def __init__(self):
         pass
 
 
-class UnknownType():
+class UnknownType:
     def __init__(self):
         pass
