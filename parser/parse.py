@@ -2,11 +2,16 @@ import ply.yacc as yacc
 from lexer.lex import tokens
 
 import parser.ast.primitives
+import parser.ast.types
 
-def p_statement_list(p):
-    r'''statement_list : statement statement_list SEMI
-                       | statement SEMI'''
-    print('statement_list', p)
+import parser.ast as ast  # yet another python hack
+
+
+def p_statement_sequence(p):
+    r'''statement_sequence : statement statement_sequence stop_statement
+                           | statement stop_statement'''
+    print('statement_sequence', p)
+
 
 def p_statement(p):
     r'''statement : composite_statement
@@ -14,12 +19,12 @@ def p_statement(p):
                   | declarations_sequence
                   | IF LPAREN relational_expression RPAREN statement
                   | IF LPAREN relational_expression RPAREN statement ELSE statement
-                  | SEMI'''
+                  | stop_statement'''
     print('statement', p)
 
 
 def p_composite_statement(p):
-    r'''composite_statement : LCURLY statement_list RCURLY
+    r'''composite_statement : LCURLY statement_sequence RCURLY
                             | LCURLY RCURLY'''
     print('composite_statement', p)
 
@@ -35,6 +40,7 @@ def p_variables_sequence(p):
     r'''variables_sequence : variable_name COMMA variables_sequence
                            | variable_name'''
     print('variables', p[1])
+
 
 def p_type(p):
     r'''type : INT
@@ -127,6 +133,7 @@ def p_value(p):
 def p_variable_name(p):
     r'''variable_name : ID LBRACKET value RBRACKET
                       | ID'''
+    print('variable_name', p)
     if len(p) == 2:
         p[0] = ast.primitives.ID(p[1])
     else:
@@ -140,4 +147,4 @@ def p_error(t):
     print('An error occurred while parsing.')
 
 
-parser = yacc.yacc(debug=False, write_tables=False)
+Parser = yacc.yacc(debug=False, write_tables=False)
