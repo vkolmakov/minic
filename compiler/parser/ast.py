@@ -13,7 +13,7 @@ class Statement(AstNode):
         self.expr = expr
 
 
-class Number(AstNode):
+class Integer(AstNode):
     def __init__(self, value):
         self.value = value
 
@@ -21,3 +21,11 @@ class Number(AstNode):
 class ID(AstNode):
     def __init__(self, name):
         self.name = name
+
+
+class BinOp(AstNode):
+    def __init__(self, op, left, right):
+        self.op = op
+        self.left = left
+        self.right = right
+
