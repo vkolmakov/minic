@@ -2,7 +2,7 @@ from rply import LexerGenerator
 
 
 class Lexer:
-    def __init__(self, source):
+    def __init__(self):
         self.token_to_regex = {
             'IF': r'if',
             'ELSE': r'else',
@@ -28,7 +28,6 @@ class Lexer:
         }
 
         self.lexer = self.build_lexer()
-        self.stream = self.lexer.lex(source)  # empty lexer
 
     def build_lexer(self):
         lg = LexerGenerator()
@@ -44,7 +43,13 @@ class Lexer:
         return self.token_to_regex.keys()
 
     def lex(self, source):
-        self.stream = self.lexer.lex(source)
+        stream = self.lexer.lex(source)
+        return TokenStream(stream)
+
+
+class TokenStream:
+    def __init__(self, stream):
+        self.stream = stream
 
     def __next__(self):
         return next(self.stream)
