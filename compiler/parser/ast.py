@@ -33,6 +33,9 @@ class Block(AstNode):
     def __init__(self, statements):
         self.statements = statements
 
+    def getastlist(self):
+        return self.statements
+
 
 class Statement(AstNode):
     def __init__(self, expr):
