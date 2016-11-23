@@ -8,8 +8,8 @@ token_to_regex = {
 
     'LPAREN': r'\(',
     'RPAREN': r'\)',
-    # 'LBRACE': r'\[',
-    # 'RBRACE': r'\]',
+    'LBRACE': r'\[',
+    'RBRACE': r'\]',
     # 'LCURLY': r'\{',
     # 'RCURLY': r'\}',
 

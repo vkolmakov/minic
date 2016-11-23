@@ -74,3 +74,9 @@ class Declaration(AstNode):
     def __init__(self, type, ids):
         self.type = type
         self.ids = ids
+
+
+class ArrayRef(AstNode):
+    def __init__(self, id, idx):
+        self.id = id
+        self.idx = idx

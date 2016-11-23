@@ -61,6 +61,11 @@ def variables_single(s):
     return s[0]
 
 
+@pg.production('variable : variable LBRACE expr RBRACE')
+def variable_arrayref(s):
+    return ast.ArrayRef(s[0], s[2])
+
+
 @pg.production('variable : ID')
 def variable(s):
     return ast.ID(s[0].getstr())
