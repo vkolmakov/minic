@@ -246,3 +246,26 @@ class TestDeclaration(unittest.TestCase):
         result = parser.parse(given)
 
         assert expected == result
+
+    def test_multiple_declaration(self):
+        '''Can parse multiple declaration: `int ducks, and, wildcats;`'''
+        given = iter([
+            Token('INT_TYPE', 'int'),
+            Token('ID', 'ducks'),
+            Token('COMMA', ','),
+            Token('ID', 'and'),
+            Token('COMMA', ','),
+            Token('ID', 'wildcats'),
+            Token('SEMI', ';')
+        ])
+
+        expected = ast.Block([
+            ast.Declaration(
+                'int',
+                [ast.ID('ducks'), ast.ID('and'), ast.ID('wildcats')]
+            )
+        ])
+
+        result = parser.parse(given)
+
+        assert expected == result
