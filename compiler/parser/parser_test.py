@@ -228,3 +228,21 @@ class TestAssignment(unittest.TestCase):
         ])
 
         assert result == expected
+
+
+class TestDeclaration(unittest.TestCase):
+    def test_simple_declaration(self):
+        '''Can parse a simple declaration: `int a;`'''
+        given = iter([
+            Token('INT_TYPE', 'int'),
+            Token('ID', 'a'),
+            Token('SEMI', ';')
+        ])
+
+        expected = ast.Block([
+            ast.Declaration('int', [ast.ID('a')])
+        ])
+
+        result = parser.parse(given)
+
+        assert expected == result
