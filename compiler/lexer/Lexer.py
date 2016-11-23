@@ -10,8 +10,8 @@ token_to_regex = {
     'RPAREN': r'\)',
     'LBRACE': r'\[',
     'RBRACE': r'\]',
-    # 'LCURLY': r'\{',
-    # 'RCURLY': r'\}',
+    'LCURLY': r'\{',
+    'RCURLY': r'\}',
 
     'SEMI': r';',
     'COMMA': r',',

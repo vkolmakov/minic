@@ -19,13 +19,24 @@ def main(s):
 
 
 @pg.production('statements : statements statement')
+@pg.production('statements : statements block')
 def statements(s):
     return ast.Block(s[0].getastlist() + [s[1]])
+
+
+@pg.production('block : LCURLY statements RCURLY')
+def block_statements(s):
+    return s[1]
 
 
 @pg.production('statements : statement')
 def statements_statement(s):
     return ast.Block([s[0]])
+
+
+@pg.production('statements : block')
+def statements_block(s):
+    return s[0]
 
 
 @pg.production('statement : expr SEMI')
