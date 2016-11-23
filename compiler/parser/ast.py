@@ -1,3 +1,6 @@
+from itertools import zip_longest
+
+
 class AstNode:
     def __eq__(self, other):
         if not isinstance(other, AstNode):
@@ -16,8 +19,9 @@ class AstNode:
 
             if hasattr(self_data, '__iter__') and hasattr(other_data, '__iter__'):
                 # if attribute is an iterable check if any of the elements are not the same
-                if any(self_subnode.__ne__(other_subnode)
-                       for (self_subnode, other_subnode) in zip(self_data, other_data)):
+                has_different_attrs = any(self_subnode.__ne__(other_subnode)
+                                          for (self_subnode, other_subnode) in zip_longest(self_data, other_data))
+                if has_different_attrs:
                     return False
 
             elif self_data.__ne__(other_data):
