@@ -45,3 +45,29 @@ class TestExpr(unittest.TestCase):
         result = parser.parse(given)
 
         assert expected == result
+
+    def test_parens(self):
+        given = iter([
+            Token('LPAREN', '('),
+            Token('INTEGER', '1'),
+            Token('PLUS', '+'),
+            Token('INTEGER', '5'),
+            Token('RPAREN', ')'),
+            Token('MUL', '*'),
+            Token('INTEGER', '20'),
+            Token('SEMI', ';')
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Statement(
+                ast.BinOp(
+                    '*',
+                    ast.BinOp('+', ast.Integer(1), ast.Integer(5)),
+                    ast.Integer(20)
+                )
+            )
+        ])
+
+        assert result == expected
