@@ -45,15 +45,6 @@ def variable(s):
 
 
 # Expressions
-@pg.production('expr : INTEGER')
-@pg.production('expr : variable')
-def expr_leaf(s):
-    if isinstance(s[0], ast.AstNode):
-        return s[0]
-    else:
-        return ast.Integer(int(s[0].getstr()))
-
-
 @pg.production('expr : LPAREN expr RPAREN')
 def expr_parens(p):
     return p[1]
@@ -65,6 +56,15 @@ def expr_parens(p):
 @pg.production('expr : expr DIV expr')
 def expr_binop(s):
     return ast.BinOp(s[1].getstr(), s[0], s[2])
+
+
+@pg.production('expr : INTEGER')
+@pg.production('expr : variable')
+def expr_leaf(s):
+    if isinstance(s[0], ast.AstNode):
+        return s[0]
+    else:
+        return ast.Integer(int(s[0].getstr()))
 
 
 # Errors
