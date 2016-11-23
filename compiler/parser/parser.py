@@ -12,6 +12,7 @@ pg = ParserGenerator(
 )
 
 
+# Statements
 @pg.production('main : statements')
 def main(s):
     return s[0]
@@ -32,6 +33,18 @@ def statement_expr(s):
     return ast.Statement(s[0])
 
 
+@pg.production('statement : variable EQUAL expr SEMI')
+def statement_assignment(s):
+    return ast.Assignment(s[0], s[2])
+
+
+# Variables
+@pg.production('variable : ID')
+def variable(s):
+    return ast.ID(s[0].getstr())
+
+
+# Expressions
 @pg.production('expr : INTEGER')
 def expr_number(s):
     return ast.Integer(int(s[0].getstr()))
@@ -50,6 +63,7 @@ def expr_binop(s):
     return ast.BinOp(s[1].getstr(), s[0], s[2])
 
 
+# Errors
 @pg.error
 def error_handler(token):
     raise ValueError('Invalid token, %s' % token.gettokentype())

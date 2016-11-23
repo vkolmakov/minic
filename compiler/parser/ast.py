@@ -55,3 +55,8 @@ class BinOp(AstNode):
         self.left = left
         self.right = right
 
+
+class Assignment(AstNode):
+    def __init__(self, id, expr):
+        self.id = id
+        self.expr = expr
