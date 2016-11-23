@@ -46,8 +46,12 @@ def variable(s):
 
 # Expressions
 @pg.production('expr : INTEGER')
-def expr_number(s):
-    return ast.Integer(int(s[0].getstr()))
+@pg.production('expr : variable')
+def expr_leaf(s):
+    if isinstance(s[0], ast.AstNode):
+        return s[0]
+    else:
+        return ast.Integer(int(s[0].getstr()))
 
 
 @pg.production('expr : LPAREN expr RPAREN')
