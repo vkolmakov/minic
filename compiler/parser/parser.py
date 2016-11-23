@@ -37,6 +37,11 @@ def expr_number(s):
     return ast.Integer(int(s[0].getstr()))
 
 
+@pg.production('expression : LPAREN expression RPAREN')
+def expr_parens(p):
+    return p[1]
+
+
 @pg.production('expr : expr PLUS expr')
 @pg.production('expr : expr MINUS expr')
 @pg.production('expr : expr MUL expr')
@@ -44,3 +49,5 @@ def expr_number(s):
 def expr_binop(s):
     return ast.BinOp(s[1].getstr(), s[0], s[2])
 
+
+parser = pg.build()
