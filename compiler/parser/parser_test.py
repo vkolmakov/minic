@@ -127,3 +127,22 @@ class TestAssignment(unittest.TestCase):
 
         assert result == expected
 
+    def test_assignment_to_id(self):
+        '''Can parse assignment to another id: `x = y`'''
+        given = iter([
+            Token('ID', 'x'),
+            Token('EQUAL', '='),
+            Token('ID', 'y'),
+            Token('SEMI', ';')
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Assignment(
+                ast.ID('x'),
+                ast.ID('y')
+            )
+        ])
+
+        assert result == expected
