@@ -120,6 +120,26 @@ class TestExpr(unittest.TestCase):
 
         assert result == expected
 
+    def test_arrayref_expression(self):
+        '''Array reference is an expression: `arr[1];`'''
+        given = iter([
+            Token('ID', 'arr'),
+            Token('LBRACE', '['),
+            Token('INTEGER', '1'),
+            Token('RBRACE', ']'),
+            Token('SEMI', ';')
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Statement(
+                ast.ArrayRef(ast.ID('arr'), ast.Integer(1))
+            )
+        ])
+
+        assert result == expected
+
 
 class TestAssignment(unittest.TestCase):
     def test_simple_assignment(self):
