@@ -15,10 +15,11 @@ class AstNode:
                 return False
 
             if hasattr(self_data, '__iter__') and hasattr(other_data, '__iter__'):
-                # if attribute is an iterable, check all subitems in order
-                for (self_subnode, other_subnode) in zip(self_data, other_data):
-                    if self_subnode.__ne__(other_subnode):
-                        return False
+                # if attribute is an iterable check if any of the elements are not the same
+                if any(self_subnode.__ne__(other_subnode)
+                       for (self_subnode, other_subnode) in zip(self_data, other_data)):
+                    return False
+
             elif self_data.__ne__(other_data):
                 # if attribute if something else, check if they are equal
                 return False
