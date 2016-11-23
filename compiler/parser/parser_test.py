@@ -334,3 +334,41 @@ class TestDeclaration(unittest.TestCase):
         result = parser.parse(given)
 
         assert expected == result
+
+
+class TestBlockStatement(unittest.TestCase):
+    def test_simple_block_of_statements(self):
+        '''Can parse a nested block of statements:
+           `int x;
+            {
+              int y;
+              x = 5;
+            }
+        '''
+        given = iter([
+            Token('INT_TYPE', 'int'),
+            Token('ID', 'x'),
+            Token('SEMI', ';'),
+
+            Token('LCURLY', '{'),
+            Token('INT_TYPE', 'int'),
+            Token('ID', 'y'),
+            Token('SEMI', ';'),
+            Token('ID', 'x'),
+            Token('EQUAL', '='),
+            Token('INTEGER', '5'),
+            Token('SEMI', ';'),
+            Token('RCURLY', '}'),
+        ])
+
+        expected = ast.Block([
+            ast.Declaration('int', [ast.ID('x')]),
+            ast.Block([
+                ast.Declaration('int', [ast.ID('y')]),
+                ast.Assignment(ast.ID('x'), ast.Integer(5))
+            ])
+        ])
+
+        result = parser.parse(given)
+
+        assert expected == result
