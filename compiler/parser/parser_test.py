@@ -71,3 +71,24 @@ class TestExpr(unittest.TestCase):
         ])
 
         assert result == expected
+
+
+class TestAssignment(unittest.TestCase):
+    def test_simple_assignment(self):
+        given = iter([
+            Token('ID', 'x'),
+            Token('EQUAL', '='),
+            Token('INTEGER', '5'),
+            Token('SEMI', ';')
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Assignment(
+                ast.ID('x'),
+                ast.Integer(5)
+            )
+        ])
+
+        assert result == expected
