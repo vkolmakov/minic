@@ -7,6 +7,7 @@ import compiler.parser.ast as ast
 
 class TestExpr(unittest.TestCase):
     def test_add(self):
+        '''Can parse a simple addition: `1 + 1;`'''
         given = iter([
             Token('INTEGER', '1'),
             Token('PLUS', '+'),
@@ -23,6 +24,7 @@ class TestExpr(unittest.TestCase):
         assert expected == result
 
     def test_op_order(self):
+        '''Enforces the right op. precedence: `1 + 5 * 20;`'''
         given = iter([
             Token('INTEGER', '1'),
             Token('PLUS', '+'),
@@ -47,6 +49,7 @@ class TestExpr(unittest.TestCase):
         assert expected == result
 
     def test_parens(self):
+        '''Honors parenthesis: `(1 + 5) * 20;`'''
         given = iter([
             Token('LPAREN', '('),
             Token('INTEGER', '1'),
@@ -75,6 +78,7 @@ class TestExpr(unittest.TestCase):
 
 class TestAssignment(unittest.TestCase):
     def test_simple_assignment(self):
+        '''Can parse a simple assignment: `x = 5;`'''
         given = iter([
             Token('ID', 'x'),
             Token('EQUAL', '='),
