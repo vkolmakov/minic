@@ -52,7 +52,8 @@ def type(s):
 # Variables
 @pg.production('variables : variables COMMA variable')
 def variables_sequence(s):
-    pass
+    return ((s[0] if hasattr(s[0], '__iter__') else [s[0]]) +
+             [s[2]])
 
 
 @pg.production('variables : variable')
