@@ -96,3 +96,34 @@ class TestAssignment(unittest.TestCase):
         ])
 
         assert result == expected
+
+    def test_expr_assignment(self):
+        '''Can parse assignment to expression: `duck = (5 + 10) * 20;`'''
+        given = iter([
+            Token('ID', 'duck'),
+            Token('EQUAL', '='),
+            Token('LPAREN', '('),
+            Token('INTEGER', '5'),
+            Token('PLUS', '+'),
+            Token('INTEGER', '10'),
+            Token('RPAREN', ')'),
+            Token('MUL', '*'),
+            Token('INTEGER', '20'),
+            Token('SEMI', ';')
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Assignment(
+                ast.ID('duck'),
+                ast.BinOp(
+                    '*',
+                    ast.BinOp('+', ast.Integer(5), ast.Integer(10)),
+                    ast.Integer(20)
+                )
+            )
+        ])
+
+        assert result == expected
+
