@@ -37,7 +37,7 @@ def expr_number(s):
     return ast.Integer(int(s[0].getstr()))
 
 
-@pg.production('expression : LPAREN expression RPAREN')
+@pg.production('expr : LPAREN expr RPAREN')
 def expr_parens(p):
     return p[1]
 
@@ -49,5 +49,9 @@ def expr_parens(p):
 def expr_binop(s):
     return ast.BinOp(s[1].getstr(), s[0], s[2])
 
+
+@pg.error
+def error_handler(token):
+    raise ValueError('Invalid token, %s' % token.gettokentype())
 
 parser = pg.build()
