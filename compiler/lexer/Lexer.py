@@ -4,6 +4,7 @@ from rply import LexerGenerator
 token_to_regex = {
     # 'IF': r'if',
     # 'ELSE': r'else',
+    'INT_TYPE': r'int',
 
     'LPAREN': r'\(',
     'RPAREN': r'\)',
@@ -13,6 +14,7 @@ token_to_regex = {
     # 'RCURLY': r'\}',
 
     'SEMI': r';',
+    'COMMA': r',',
     'EQUAL': r'=',
 
     # 'EQUAL_EQUAL': r'==',

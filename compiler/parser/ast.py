@@ -64,3 +64,9 @@ class Assignment(AstNode):
     def __init__(self, id, expr):
         self.id = id
         self.expr = expr
+
+
+class Declaration(AstNode):
+    def __init__(self, type, ids):
+        self.type = type
+        self.ids = ids

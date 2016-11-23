@@ -38,7 +38,28 @@ def statement_assignment(s):
     return ast.Assignment(s[0], s[2])
 
 
+@pg.production('statement : type variables SEMI')
+def statement_declaration(s):
+    return ast.Declaration(s[0],
+                           [s[1]] if isinstance(s[1], ast.AstNode) else s[1])
+
+
+@pg.production('type : INT_TYPE')
+def type(s):
+    return s[0].getstr()
+
+
 # Variables
+@pg.production('variables : variables COMMA variable')
+def variables_sequence(s):
+    pass
+
+
+@pg.production('variables : variable')
+def variables_single(s):
+    return s[0]
+
+
 @pg.production('variable : ID')
 def variable(s):
     return ast.ID(s[0].getstr())
