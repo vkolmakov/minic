@@ -146,3 +146,34 @@ class TestAssignment(unittest.TestCase):
         ])
 
         assert result == expected
+
+    def test_expr_assignment_with_ids(self):
+        '''Can parse assignment to expression with ids:
+           `duck = (goose + 10) * duck;`'''
+        given = iter([
+            Token('ID', 'duck'),
+            Token('EQUAL', '='),
+            Token('LPAREN', '('),
+            Token('ID', 'goose'),
+            Token('PLUS', '+'),
+            Token('INTEGER', '10'),
+            Token('RPAREN', ')'),
+            Token('MUL', '*'),
+            Token('ID', 'duck'),
+            Token('SEMI', ';')
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Assignment(
+                ast.ID('duck'),
+                ast.BinOp(
+                    '*',
+                    ast.BinOp('+', ast.ID('goose'), ast.Integer(10)),
+                    ast.ID('duck')
+                )
+            )
+        ])
+
+        assert result == expected
