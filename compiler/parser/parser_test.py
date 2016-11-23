@@ -177,3 +177,54 @@ class TestAssignment(unittest.TestCase):
         ])
 
         assert result == expected
+
+    def test_assignment_to_id(self):
+        '''Can parse multiple assignments:
+           `x = 5;
+            y = 10 * z;
+            sum_times_five = (x + y) * 5;`'''
+        given = iter([
+            Token('ID', 'x'),
+            Token('EQUAL', '='),
+            Token('INTEGER', '5'),
+            Token('SEMI', ';'),
+            Token('ID', 'y'),
+            Token('EQUAL', '='),
+            Token('INTEGER', '10'),
+            Token('MUL', '*'),
+            Token('ID', 'z'),
+            Token('SEMI', ';'),
+            Token('ID', 'sum_times_five'),
+            Token('EQUAL', '='),
+            Token('LPAREN', '('),
+            Token('ID', 'x'),
+            Token('PLUS', '+'),
+            Token('ID', 'y'),
+            Token('RPAREN', ')'),
+            Token('MUL', '*'),
+            Token('INTEGER', '5'),
+            Token('SEMI', ';'),
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Assignment(
+                ast.ID('x'),
+                ast.Integer(5)
+            ),
+            ast.Assignment(
+                ast.ID('y'),
+                ast.BinOp('*', ast.Integer(10), ast.ID('z'))
+            ),
+            ast.Assignment(
+                ast.ID('sum_times_five'),
+                ast.BinOp(
+                    '*',
+                    ast.BinOp('+', ast.ID('x'), ast.ID('y')),
+                    ast.Integer(5)
+                )
+            )
+        ])
+
+        assert result == expected
