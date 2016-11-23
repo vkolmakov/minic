@@ -22,3 +22,26 @@ class TestExpr(unittest.TestCase):
 
         assert expected == result
 
+    def test_op_order(self):
+        given = iter([
+            Token('INTEGER', '1'),
+            Token('PLUS', '+'),
+            Token('INTEGER', '5'),
+            Token('MUL', '*'),
+            Token('INTEGER', '20'),
+            Token('SEMI', ';')
+        ])
+
+        expected = ast.Block([
+            ast.Statement(
+                ast.BinOp(
+                    '+',
+                    ast.Integer(1),
+                    ast.BinOp('*', ast.Integer(5), ast.Integer(20))
+                )
+            )
+        ])
+
+        result = parser.parse(given)
+
+        assert expected == result
