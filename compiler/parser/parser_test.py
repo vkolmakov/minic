@@ -75,6 +75,51 @@ class TestExpr(unittest.TestCase):
 
         assert result == expected
 
+    def test_simple_id(self):
+        '''IDs are treated as expressions: `x;`'''
+        given = iter([
+            Token('ID', 'x'),
+            Token('SEMI', ';')
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Statement(
+                ast.ID('x')
+            )
+        ])
+
+        assert result == expected
+
+    def test_mixed_expression(self):
+        '''An expression can have both numbers and ids:
+           `x * (y + 10);`'''
+        given = iter([
+            Token('ID', 'x'),
+            Token('MUL', '*'),
+            Token('LPAREN', '('),
+            Token('ID', 'y'),
+            Token('PLUS', '+'),
+            Token('INTEGER', '10'),
+            Token('RPAREN', ')'),
+            Token('SEMI', ';')
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Statement(
+                ast.BinOp(
+                    '*',
+                    ast.ID('x'),
+                    ast.BinOp('+', ast.ID('y'), ast.Integer(10))
+                )
+            )
+        ])
+
+        assert result == expected
+
 
 class TestAssignment(unittest.TestCase):
     def test_simple_assignment(self):
