@@ -46,3 +46,25 @@ class TestSimpleStrings(unittest.TestCase):
 
         for (r, e) in zip_longest(result, expected):
             assert r == e
+
+    def test_float_numbers(self):
+        '''Can lex floating numbers: `x = 55.25 + 44. - 3 + 2.0;`'''
+        given = 'x = 55.25 + 44. - 3 + 2.0;'
+
+        expected = iter([
+            Token('ID', 'x'),
+            Token('EQUAL', '='),
+            Token('FLOAT', '55.25'),
+            Token('PLUS', '+'),
+            Token('FLOAT', '44.'),
+            Token('MINUS', '-'),
+            Token('INTEGER', '3'),
+            Token('PLUS', '+'),
+            Token('FLOAT', '2.0'),
+            Token('SEMI', ';'),
+        ])
+
+        result = lexer.lex(given)
+
+        for (r, e) in zip_longest(result, expected):
+            assert r == e
