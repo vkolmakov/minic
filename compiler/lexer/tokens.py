@@ -16,8 +16,8 @@ name_with_pattern = [
     ('SMALLER', r'<'),
     ('SMALLER_EQUAL', r'<='),
 
+    ('FLOAT', r'\d+\.\d*'),
     ('INTEGER', r'\d+'),
-    # ('FLOAT', r'\d+?\.\d+'),
     ('ID', r'[a-zA-Z_][a-zA-Z0-9_]*'),
 
     ('PLUS', r'\+'),
