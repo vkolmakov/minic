@@ -80,3 +80,10 @@ class ArrayRef(AstNode):
     def __init__(self, id, idx):
         self.id = id
         self.idx = idx
+
+
+class IfStatement(AstNode):
+    def __init__(self, cond, then, otherwise):
+        self.cond = cond
+        self.then = then
+        self.otherwise = otherwise

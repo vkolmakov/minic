@@ -2,8 +2,8 @@ from rply import LexerGenerator
 
 
 token_to_regex = {
-    # 'IF': r'if',
-    # 'ELSE': r'else',
+    'IF': r'if',
+    'ELSE': r'else',
     'INT_TYPE': r'int',
 
     'LPAREN': r'\(',

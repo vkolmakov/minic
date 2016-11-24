@@ -39,6 +39,7 @@ def statements_block(s):
     return s[0]
 
 
+# Statement
 @pg.production('statement : expr SEMI')
 def statement_expr(s):
     return ast.Statement(s[0])
@@ -55,6 +56,17 @@ def statement_declaration(s):
                            [s[1]] if isinstance(s[1], ast.AstNode) else s[1])
 
 
+@pg.production('statement : if_statement')
+def statement_if_statement(s):
+    return s[0]
+
+
+@pg.production('if_statement : IF LPAREN expr RPAREN block')
+def if_statement(s):
+    return ast.IfStatement(s[2], s[4], ast.Block([]))
+
+
+# Types
 @pg.production('type : INT_TYPE')
 def type(s):
     return s[0].getstr()
