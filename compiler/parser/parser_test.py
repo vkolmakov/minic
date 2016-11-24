@@ -1,8 +1,11 @@
 import unittest
 from rply import Token
 
-from compiler.parser.parser import parser
+from compiler.parser.parser import Parser
 import compiler.parser.ast as ast
+
+
+parser = Parser()
 
 
 class TestExpr(unittest.TestCase):
