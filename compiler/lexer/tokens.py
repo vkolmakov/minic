@@ -2,6 +2,7 @@ name_with_pattern = [
     ('IF', r'if'),
     ('ELSE', r'else'),
     ('INT_TYPE', r'int'),
+    ('FLOAT_TYPE', r'float'),
 
     ('LPAREN', r'\('),
     ('RPAREN', r'\)'),

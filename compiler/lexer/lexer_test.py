@@ -93,5 +93,4 @@ class TestKeywords(unittest.TestCase):
         result = lexer.lex(given)
 
         for (r, e) in zip_longest(result, expected):
-            print(r, e)
             assert r == e
