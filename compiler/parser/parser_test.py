@@ -174,6 +174,29 @@ class TestExpr(unittest.TestCase):
 
         assert result == expected
 
+    def test_float_expression(self):
+        '''Expression with floats and integers: `1.0 + 2;`'''
+        given = iter([
+            Token('FLOAT', '1.0'),
+            Token('PLUS', '+'),
+            Token('INTEGER', '2'),
+            Token('SEMI', ';')
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Statement(
+                ast.BinOp(
+                    '+',
+                    ast.Float(1.0),
+                    ast.Integer(2)
+                )
+            )
+        ])
+
+        assert result == expected
+
 
 class TestAssignment(unittest.TestCase):
     def test_simple_assignment(self):
