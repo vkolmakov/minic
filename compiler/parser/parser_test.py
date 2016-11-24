@@ -75,6 +75,37 @@ class TestExpr(unittest.TestCase):
 
         assert result == expected
 
+    def test_relational_op_order(self):
+        '''Relational ops have lowest precedence: `3 * 5 + 3 == 18;` '''
+        given = iter([
+            Token('INTEGER', '3'),
+            Token('MUL', '*'),
+            Token('INTEGER', '5'),
+            Token('PLUS', '+'),
+            Token('INTEGER', '3'),
+            Token('EQUAL_EQUAL', '=='),
+            Token('INTEGER', '18'),
+            Token('SEMI', ';')
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Statement(
+                ast.BinOp(
+                    '==',
+                    ast.BinOp(
+                        '+',
+                        ast.BinOp('*', ast.Integer(3), ast.Integer(5)),
+                        ast.Integer(3)
+                    ),
+                    ast.Integer(18)
+                )
+            )
+        ])
+
+        assert result == expected
+
     def test_simple_id(self):
         '''IDs are treated as expressions: `x;`'''
         given = iter([
@@ -243,7 +274,7 @@ class TestAssignment(unittest.TestCase):
 
         assert result == expected
 
-    def test_assignment_to_id(self):
+    def test_multiline_assignment(self):
         '''Can parse multiple assignments:
            `x = 5;
             y = 10 * z;
