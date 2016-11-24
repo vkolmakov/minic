@@ -66,6 +66,11 @@ def if_statement(s):
     return ast.IfStatement(s[2], s[4], ast.Block([]))
 
 
+@pg.production('if_statement : IF LPAREN expr RPAREN block ELSE block')
+def ifelse_statement(s):
+    return ast.IfStatement(s[2], s[4], s[6])
+
+
 # Types
 @pg.production('type : INT_TYPE')
 def type(s):
