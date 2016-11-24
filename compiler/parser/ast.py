@@ -70,6 +70,12 @@ class BinOp(AstNode):
         self.right = right
 
 
+class UnaryOp(AstNode):
+    def __init__(self, op, expr):
+        self.op = op
+        self.expr = expr
+
+
 class Assignment(AstNode):
     def __init__(self, id, expr):
         self.id = id

@@ -21,6 +21,7 @@ name_with_pattern = [
     ('INTEGER', r'\d+'),
     ('ID', r'[a-zA-Z_][a-zA-Z0-9_]*'),
 
+    ('BANG', '!'),
     ('PLUS', r'\+'),
     ('MINUS', r'\-'),
     ('MUL', r'\*'),

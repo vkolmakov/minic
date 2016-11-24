@@ -93,8 +93,13 @@ def variables_productions(pg):
 def expressions_productions(pg):
     # Expressions
     @pg.production('expr : LPAREN expr RPAREN')
-    def expr_parens(p):
-        return p[1]
+    def expr_parens(s):
+        return s[1]
+
+    @pg.production('expr : MINUS expr')
+    @pg.production('expr : BANG expr')
+    def expr_unaryop(s):
+        return ast.UnaryOp(s[0].getstr(), s[1])
 
     @pg.production('expr : expr PLUS expr')
     @pg.production('expr : expr MINUS expr')
