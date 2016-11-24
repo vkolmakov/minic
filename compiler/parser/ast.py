@@ -1,4 +1,5 @@
 from itertools import zip_longest
+from compiler.utils import is_iterable
 
 
 class AstNode:
@@ -17,7 +18,7 @@ class AstNode:
             if not type(self_data) is type(other_data):
                 return False
 
-            if hasattr(self_data, '__iter__') and hasattr(other_data, '__iter__'):
+            if is_iterable(self_data) and is_iterable(other_data):
                 # if attribute is an iterable check if any of the elements are not the same
                 has_different_attrs = any(self_subnode.__ne__(other_subnode)
                                           for (self_subnode, other_subnode) in zip_longest(self_data, other_data))

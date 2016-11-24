@@ -1,6 +1,7 @@
 from rply import ParserGenerator
 import compiler.parser.ast as ast
 from compiler.lexer.Lexer import Lexer
+from compiler.utils import is_iterable
 
 
 pg = ParserGenerator(
@@ -81,7 +82,7 @@ def type(s):
 # Variables
 @pg.production('variables : variables COMMA variable')
 def variables_sequence(s):
-    return ((s[0] if hasattr(s[0], '__iter__') else [s[0]]) +
+    return ((s[0] if is_iterable(s[0]) else [s[0]]) +
             [s[2]])
 
 

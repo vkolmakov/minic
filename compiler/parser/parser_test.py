@@ -76,7 +76,7 @@ class TestExpr(unittest.TestCase):
         assert result == expected
 
     def test_relational_op_order(self):
-        '''Relational ops have lowest precedence: `3 * 5 + 3 == 18;` '''
+        '''Relational ops have lowest precedence: `3 * 5 + 3 == 18;`'''
         given = iter([
             Token('INTEGER', '3'),
             Token('MUL', '*'),
