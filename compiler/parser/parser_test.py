@@ -457,3 +457,67 @@ class TestIfStatement(unittest.TestCase):
         result = parser.parse(given)
 
         assert expected == result
+
+
+class TestParser(unittest.TestCase):
+    def test_simple_program(self):
+        '''Can parse a simple program
+           `int x[3], duck, goose, wildcat;
+
+            duck = 1;
+            goose = 2;
+
+            x[0] = duck;
+            x[duck] = goose;
+
+            if (duck + x[duck]) {
+              wildcat = duck;
+            } else {
+              wildcat = goose;
+            }
+            x[2] = wildcat;`
+        '''
+        given = iter([
+            Token('INT_TYPE', 'int'),
+            Token('ID', 'x'), Token('LBRACE', '['), Token('INTEGER', '3'), Token('RBRACE', ']'), Token('COMMA', ','),
+            Token('ID', 'duck'), Token('COMMA', ','),
+            Token('ID', 'goose'), Token('COMMA', ','),
+            Token('ID', 'wildcat'), Token('SEMI', ';'),
+
+            Token('ID', 'duck'), Token('EQUAL', '='), Token('INTEGER', '1'), Token('SEMI', ';'),
+            Token('ID', 'goose'), Token('EQUAL', '='), Token('INTEGER', '2'), Token('SEMI', ';'),
+            Token('ID', 'x'), Token('LBRACE', '['), Token('INTEGER', '0'), Token('RBRACE', ']'), Token('EQUAL', '='), Token('ID', 'duck'), Token('SEMI', ';'),
+            Token('ID', 'x'), Token('LBRACE', '['), Token('ID', 'duck'), Token('RBRACE', ']'), Token('EQUAL', '='), Token('ID', 'goose'), Token('SEMI', ';'),
+            Token('IF', 'if'), Token('LPAREN', '('), Token('ID', 'duck'), Token('PLUS', '+'), Token('ID', 'x'), Token('LBRACE', '['), Token('ID', 'duck'), Token('RBRACE', ']'), Token('RPAREN', ')'),
+            Token('LCURLY', '{'), Token('ID', 'wildcat'), Token('EQUAL', '='), Token('ID', 'duck'), Token('SEMI', ';'), Token('RCURLY', '}'),
+            Token('ELSE', 'else'), Token('LCURLY', '{'), Token('ID', 'wildcat'), Token('EQUAL', '='), Token('ID', 'goose'), Token('SEMI', ';'), Token('RCURLY', '}'),
+            Token('ID', 'x'), Token('LBRACE', '['), Token('INTEGER', '2'), Token('RBRACE', ']'), Token('EQUAL', '='), Token('ID', 'wildcat'), Token('SEMI', ';')
+        ])
+
+        expected = ast.Block([
+            ast.Declaration(
+                'int',
+                [ast.ArrayRef(ast.ID('x'), ast.Integer(3)), ast.ID('duck'), ast.ID('goose'), ast.ID('wildcat')]
+            ),
+            ast.Assignment(ast.ID('duck'), ast.Integer(1)),
+            ast.Assignment(ast.ID('goose'), ast.Integer(2)),
+
+            ast.Assignment(ast.ArrayRef(ast.ID('x'), ast.Integer(0)), ast.ID('duck')),
+            ast.Assignment(ast.ArrayRef(ast.ID('x'), ast.ID('duck')), ast.ID('goose')),
+
+            ast.IfStatement(
+                ast.BinOp('+', ast.ID('duck'), ast.ArrayRef(ast.ID('x'), ast.ID('duck'))),
+                ast.Block([
+                    ast.Assignment(ast.ID('wildcat'), ast.ID('duck'))
+                ]),
+                ast.Block([
+                    ast.Assignment(ast.ID('wildcat'), ast.ID('goose'))
+                ])
+            ),
+
+            ast.Assignment(ast.ArrayRef(ast.ID('x'), ast.Integer(2)), ast.ID('wildcat')),
+        ])
+
+        result = parser.parse(given)
+
+        assert expected == result
