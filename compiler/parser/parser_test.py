@@ -392,6 +392,25 @@ class TestDeclaration(unittest.TestCase):
 
         assert expected == result
 
+    def test_float_declaration(self):
+        '''Can parse float declaration: `float duck;`'''
+        given = iter([
+            Token('FLOAT_TYPE', 'float'),
+            Token('ID', 'duck'),
+            Token('SEMI', ';')
+        ])
+
+        expected = ast.Block([
+            ast.Declaration(
+                'float',
+                [ast.ID('duck')]
+            )
+        ])
+
+        result = parser.parse(given)
+
+        assert expected == result
+
 
 class TestBlockStatement(unittest.TestCase):
     def test_simple_block_of_statements(self):
