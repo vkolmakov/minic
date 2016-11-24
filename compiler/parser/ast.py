@@ -53,6 +53,11 @@ class Integer(AstNode):
         self.value = value
 
 
+class Float(AstNode):
+    def __init__(self, value):
+        self.value = value
+
+
 class ID(AstNode):
     def __init__(self, name):
         self.name = name

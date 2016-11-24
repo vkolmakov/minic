@@ -108,12 +108,20 @@ def expressions_productions(pg):
         return ast.BinOp(s[1].getstr(), s[0], s[2])
 
     @pg.production('expr : INTEGER')
+    @pg.production('expr : FLOAT')
     @pg.production('expr : variable')
     def expr_leaf(s):
         if isinstance(s[0], ast.AstNode):
             return s[0]
         else:
-            return ast.Integer(int(s[0].getstr()))
+            handlers = {
+                'INTEGER': lambda t: ast.Integer(int(t.getstr())),
+                'FLOAT': lambda t: ast.Float(float(t.getstr())),
+            }
+
+            default_handler = lambda t: t  # noqa
+
+            return handlers.get(s[0].gettokentype(), default_handler)(s[0])
 
     return pg
 
