@@ -17,11 +17,11 @@ token_to_regex = {
     'COMMA': r',',
     'EQUAL': r'=',
 
-    # 'EQUAL_EQUAL': r'==',
-    # 'GREATER': r'>',
-    # 'GREATER_EQUAL': r'>=',
-    # 'SMALLER': r'<',
-    # 'SMALLER_EQUAL': r'<=',
+    'EQUAL_EQUAL': r'==',
+    'GREATER': r'>',
+    'GREATER_EQUAL': r'>=',
+    'SMALLER': r'<',
+    'SMALLER_EQUAL': r'<=',
 
     'INTEGER': r'\d+',
     'ID': r'[a-zA-Z_][a-zA-Z0-9_]*',

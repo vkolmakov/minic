@@ -6,6 +6,7 @@ from compiler.lexer.Lexer import Lexer
 pg = ParserGenerator(
     Lexer.token_names(),
     precedence = [
+        ('left', ['EQUAL_EQUAL', 'GREATER', 'GREATER_EQUAL', 'SMALLER', 'SMALLER_EQUAL']),
         ('left', ['PLUS', 'MINUS']),
         ('left', ['MUL', 'DIV'])
     ]
@@ -109,6 +110,11 @@ def expr_parens(p):
 @pg.production('expr : expr MINUS expr')
 @pg.production('expr : expr MUL expr')
 @pg.production('expr : expr DIV expr')
+@pg.production('expr : expr EQUAL_EQUAL expr')
+@pg.production('expr : expr GREATER expr')
+@pg.production('expr : expr GREATER_EQUAL expr')
+@pg.production('expr : expr SMALLER expr')
+@pg.production('expr : expr SMALLER_EQUAL expr')
 def expr_binop(s):
     return ast.BinOp(s[1].getstr(), s[0], s[2])
 
