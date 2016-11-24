@@ -197,6 +197,39 @@ class TestExpr(unittest.TestCase):
 
         assert result == expected
 
+    def test_unary_op_expression(self):
+        '''Unary operations are supported: `(5 + -1) - !3;`'''
+        given = iter([
+            Token('LPAREN', '('),
+            Token('INTEGER', '5'),
+            Token('PLUS', '+'),
+            Token('MINUS', '-'),
+            Token('INTEGER', '1'),
+            Token('RPAREN', ')'),
+            Token('MINUS', '-'),
+            Token('BANG', '!'),
+            Token('INTEGER', '3'),
+            Token('SEMI', ';')
+        ])
+
+        result = parser.parse(given)
+
+        expected = ast.Block([
+            ast.Statement(
+                ast.BinOp(
+                    '-',
+                    ast.BinOp(
+                        '+',
+                        ast.Integer(5),
+                        ast.UnaryOp('-', ast.Integer(1))
+                    ),
+                    ast.UnaryOp('!', ast.Integer(3))
+                )
+            )
+        ])
+
+        assert result == expected
+
 
 class TestAssignment(unittest.TestCase):
     def test_simple_assignment(self):
