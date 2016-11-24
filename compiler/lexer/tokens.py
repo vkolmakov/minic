@@ -11,6 +11,7 @@ name_with_pattern = [
     ('LCURLY', r'\{'),
     ('RCURLY', r'\}'),
 
+    ('NOT_EQUAL', r'!='),
     ('EQUAL_EQUAL', r'=='),
     ('GREATER', r'>'),
     ('GREATER_EQUAL', r'>='),
@@ -21,11 +22,15 @@ name_with_pattern = [
     ('INTEGER', r'\d+'),
     ('ID', r'[a-zA-Z_][a-zA-Z0-9_]*'),
 
-    ('BANG', '!'),
+    ('AND', r'\&\&'),
+    ('OR', r'\|\|'),
+
+    ('BANG', r'!'),
     ('PLUS', r'\+'),
     ('MINUS', r'\-'),
     ('MUL', r'\*'),
     ('DIV', r'\/'),
+    ('MOD', r'\%'),
 
     ('SEMI', r';'),
     ('COMMA', r','),

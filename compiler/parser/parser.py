@@ -12,15 +12,14 @@ class Parser:
         pg = ParserGenerator(
             token_names,
             precedence = [
-                ('left', ['EQUAL_EQUAL', 'GREATER', 'GREATER_EQUAL', 'SMALLER', 'SMALLER_EQUAL']),
+                ('left', ['NOT_EQUAL', 'EQUAL_EQUAL', 'GREATER', 'GREATER_EQUAL', 'SMALLER', 'SMALLER_EQUAL']),
+                ('left', ['OR', 'AND']),
                 ('left', ['PLUS', 'MINUS']),
-                ('left', ['MUL', 'DIV'])
+                ('left', ['MUL', 'DIV', 'MOD'])
             ]
         )
 
-        pg1 = add_productions(pg)
-
-        return pg1.build()
+        return add_productions(pg).build()
 
     def parse(self, tokens):
         return self.parser.parse(tokens)
