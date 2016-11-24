@@ -1,11 +1,11 @@
 from rply import ParserGenerator
 import compiler.parser.ast as ast
-from compiler.lexer.Lexer import Lexer
+from compiler.lexer.tokens import names as token_names
 from compiler.utils import is_iterable
 
 
 pg = ParserGenerator(
-    Lexer.token_names(),
+    token_names,
     precedence = [
         ('left', ['EQUAL_EQUAL', 'GREATER', 'GREATER_EQUAL', 'SMALLER', 'SMALLER_EQUAL']),
         ('left', ['PLUS', 'MINUS']),

@@ -2,7 +2,7 @@ import unittest
 from itertools import zip_longest
 from rply import Token
 
-from compiler.lexer.Lexer import Lexer
+from compiler.lexer.lexer import Lexer
 
 
 lexer = Lexer()
