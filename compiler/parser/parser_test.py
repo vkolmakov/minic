@@ -408,3 +408,52 @@ class TestIfStatement(unittest.TestCase):
         result = parser.parse(given)
 
         assert expected == result
+
+    def test_if_else_statement(self):
+        '''Can parse an if-else statement
+           `if (x + 3) {
+              duck = x;
+            } else {
+              goose = x;
+            }`
+        '''
+        given = iter([
+            Token('IF', 'if'),
+            Token('LPAREN', '('),
+            Token('ID', 'x'),
+            Token('PLUS', '+'),
+            Token('INTEGER', '3'),
+            Token('RPAREN', ')'),
+
+            Token('LCURLY', '{'),
+            Token('ID', 'duck'),
+            Token('EQUAL', '='),
+            Token('ID', 'x'),
+            Token('SEMI', ';'),
+            Token('RCURLY', '}'),
+
+            Token('ELSE', 'else'),
+
+            Token('LCURLY', '{'),
+            Token('ID', 'goose'),
+            Token('EQUAL', '='),
+            Token('ID', 'x'),
+            Token('SEMI', ';'),
+            Token('RCURLY', '}'),
+        ])
+
+        expected = ast.Block([
+            ast.IfStatement(
+                ast.BinOp('+', ast.ID('x'), ast.Integer(3)),
+                ast.Block([
+                    ast.Assignment(ast.ID('duck'), ast.ID('x'))
+                ]),
+                ast.Block([
+                    ast.Assignment(ast.ID('goose'), ast.ID('x'))
+                ])
+            )
+        ])
+
+        result = parser.parse(given)
+
+        assert expected == result
