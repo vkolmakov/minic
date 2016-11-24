@@ -343,7 +343,7 @@ class TestBlockStatement(unittest.TestCase):
             {
               int y;
               x = 5;
-            }
+            }`
         '''
         given = iter([
             Token('INT_TYPE', 'int'),
@@ -367,6 +367,42 @@ class TestBlockStatement(unittest.TestCase):
                 ast.Declaration('int', [ast.ID('y')]),
                 ast.Assignment(ast.ID('x'), ast.Integer(5))
             ])
+        ])
+
+        result = parser.parse(given)
+
+        assert expected == result
+
+
+class TestIfStatement(unittest.TestCase):
+    def test_single_if_statement(self):
+        '''Can parse a single if statement
+           `if (1) {
+              duck = 3;
+            }`
+        '''
+        given = iter([
+            Token('IF', 'if'),
+            Token('LPAREN', '('),
+            Token('INTEGER', '1'),
+            Token('RPAREN', ')'),
+
+            Token('LCURLY', '{'),
+            Token('ID', 'duck'),
+            Token('EQUAL', '='),
+            Token('INTEGER', '3'),
+            Token('SEMI', ';'),
+            Token('RCURLY', '}'),
+        ])
+
+        expected = ast.Block([
+            ast.IfStatement(
+                ast.Integer(1),
+                ast.Block([
+                    ast.Assignment(ast.ID('duck'), ast.Integer(3))
+                ]),
+                ast.Block([])
+            )
         ])
 
         result = parser.parse(given)
