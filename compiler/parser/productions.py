@@ -61,6 +61,7 @@ def statement_productions(pg):
 def type_productions(pg):
     # Types
     @pg.production('type : INT_TYPE')
+    @pg.production('type : FLOAT_TYPE')
     def type(s):
         return s[0].getstr()
 
