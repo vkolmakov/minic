@@ -44,3 +44,48 @@ class TestTypechecker(unittest.TestCase):
 
         for (r, e) in zip_longest(report.get_errors(), expected_errors):
             assert r == e
+
+    def test_binop_correct(self):
+        '''An error with given program:
+           `int more_cowbell;
+            more_cowbell = 2000 + 1;`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('more_cowbell')]),
+            ast.Assignment(
+                ast.ID('more_cowbell'),
+                ast.BinOp('+', ast.Integer(2000), ast.Integer(1))
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = []
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
+
+    def test_binop_error(self):
+        '''An error with given program:
+           `int more_cowbell;
+            more_cowbell = 2000.0 + 1;`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('more_cowbell')]),
+            ast.Assignment(
+                ast.ID('more_cowbell'),
+                ast.BinOp('+', ast.Float(2000.0), ast.Integer(1))
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = [
+            TypecheckerError(
+                ast.Assignment(
+                    ast.ID('more_cowbell'),
+                    ast.BinOp('+', ast.Float(2000.0), ast.Integer(1))
+                )
+            )
+        ]
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
