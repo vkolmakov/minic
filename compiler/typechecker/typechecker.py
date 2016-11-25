@@ -27,12 +27,13 @@ class Typechecker:
                 else:
                     return types
 
-            # make int coerce to float
-            return 'float' if any(
-                expr_type
-                for expr_type in get_expression_type_rec(ast_expr, [])
-                if expr_type == 'float'
-            ) else 'int'
+            expr_types = get_expression_type_rec(ast_expr, [])
+            if all(t == 'int' for t in expr_types):
+                return 'int'
+            elif all(t == 'float' for t in expr_types):
+                return 'float'
+            else:
+                return None
 
     def typecheck(self, tree):
         error_report = TypecheckerReport()
