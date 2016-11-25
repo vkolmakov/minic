@@ -19,6 +19,8 @@ class Typechecker:
                     return ['float'] + types[:]
                 elif type(node) is ast.Integer:
                     return ['int'] + types[:]
+                elif type(node) is ast.ID:
+                    return [self.get_id_type(node)] + types[:]
                 elif type(node) is ast.BinOp:
                     return (get_expression_type_rec(node.left, types) +
                             get_expression_type_rec(node.right, types))
