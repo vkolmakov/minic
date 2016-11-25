@@ -2,44 +2,9 @@ import compiler.parser.ast as ast
 
 
 class Typechecker:
-    class SymbolTable:
-        def __init__(self):
-            self.declarations = {}  # str -> str, contains ids to types
-
-        def add_declaration(self, ast_declaration):
-            for ast_id in ast_declaration.ids:
-                self.declarations[ast_id.name] = ast_declaration.type
-
-        def get_id_type(self, ast_id):
-            return self.declarations[ast_id.name]
-
-        def get_expression_type(self, ast_expr):
-            def get_expression_type_rec(node, types):
-                if type(node) is ast.Float:
-                    return ['float'] + types[:]
-                elif type(node) is ast.Integer:
-                    return ['int'] + types[:]
-                elif type(node) is ast.ID:
-                    return [self.get_id_type(node)] + types[:]
-                elif type(node) is ast.BinOp:
-                    return (get_expression_type_rec(node.left, types) +
-                            get_expression_type_rec(node.right, types))
-                elif type(node) is ast.UnaryOp:
-                    return get_expression_type_rec(node.expr, types)
-                else:
-                    return types
-
-            expr_types = get_expression_type_rec(ast_expr, [])
-            if all(t == 'int' for t in expr_types):
-                return 'int'
-            elif all(t == 'float' for t in expr_types):
-                return 'float'
-            else:
-                return None
-
     def typecheck(self, tree):
         error_report = TypecheckerReport()
-        symbol_table = Typechecker.SymbolTable()
+        symbol_table = SymbolTable()
 
         def typecheck_rec(node):
             if type(node) is ast.Assignment:
@@ -54,6 +19,42 @@ class Typechecker:
             typecheck_rec(node)
 
         return error_report
+
+
+class SymbolTable:
+    def __init__(self):
+        self.declarations = {}  # str -> str, contains ids to types
+
+    def add_declaration(self, ast_declaration):
+        for ast_id in ast_declaration.ids:
+            self.declarations[ast_id.name] = ast_declaration.type
+
+    def get_id_type(self, ast_id):
+        return self.declarations[ast_id.name]
+
+    def get_expression_type(self, ast_expr):
+        def get_expression_type_rec(node, types):
+            if type(node) is ast.Float:
+                return ['float'] + types[:]
+            elif type(node) is ast.Integer:
+                return ['int'] + types[:]
+            elif type(node) is ast.ID:
+                return [self.get_id_type(node)] + types[:]
+            elif type(node) is ast.BinOp:
+                return (get_expression_type_rec(node.left, types) +
+                        get_expression_type_rec(node.right, types))
+            elif type(node) is ast.UnaryOp:
+                return get_expression_type_rec(node.expr, types)
+            else:
+                return types
+
+        expr_types = get_expression_type_rec(ast_expr, [])
+        if all(t == 'int' for t in expr_types):
+            return 'int'
+        elif all(t == 'float' for t in expr_types):
+            return 'float'
+        else:
+            return None
 
 
 class TypecheckerReport:
