@@ -230,3 +230,63 @@ class TestTypechecker(unittest.TestCase):
 
         for (r, e) in zip_longest(report.get_errors(), expected_errors):
             assert r == e
+
+    def test_if_statement_correct(self):
+        '''No error with given program:
+           `int x;
+            if (x) {
+              x = 1;
+            } else {
+              x = 0;
+            }`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('x')]),
+            ast.IfStatement(
+                ast.ID('x'),
+                ast.Block([
+                    ast.Assignment(ast.ID('x'), ast.Integer(1))
+                ]),
+                ast.Block([
+                    ast.Assignment(ast.ID('x'), ast.Integer(0))
+                ]),
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = []
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
+
+    def test_if_statement_error(self):
+        '''An error with given program:
+           `int x;
+            if (x) {
+              x = 1.0;
+            } else {
+              x = 0;
+            }`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('x')]),
+            ast.IfStatement(
+                ast.ID('x'),
+                ast.Block([
+                    ast.Assignment(ast.ID('x'), ast.Float(1.0))
+                ]),
+                ast.Block([
+                    ast.Assignment(ast.ID('x'), ast.Integer(0))
+                ]),
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = [
+            TypecheckerError(
+                ast.Assignment(ast.ID('x'), ast.Float(1.0))
+            )
+        ]
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
