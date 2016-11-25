@@ -14,9 +14,14 @@ class Typechecker:
                     error_report.add_error(node)
             elif type(node) is ast.Declaration:
                 symbol_table.add_declaration(node)
+            elif type(node) is ast.IfStatement:
+                typecheck_rec(node.then)
+                typecheck_rec(node.otherwise)
+            elif type(node) is ast.Block:
+                for statement in node.statements:
+                    typecheck_rec(statement)
 
-        for node in tree.statements:
-            typecheck_rec(node)
+        typecheck_rec(tree)
 
         return error_report
 
