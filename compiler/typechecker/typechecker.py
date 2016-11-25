@@ -5,23 +5,32 @@ class Typechecker:
     class SymbolTable:
         def __init__(self):
             self.declarations = {}  # str -> str, contains ids to types
-            self.assignments = []  # list(ast.Assignment)
 
         def add_declaration(self, ast_declaration):
             for ast_id in ast_declaration.ids:
                 self.declarations[ast_id.name] = ast_declaration.type
 
-        def add_assignment(self, ast_assignment):
-            self.assignments += [ast_assignment]
-
         def get_id_type(self, ast_id):
             return self.declarations[ast_id.name]
 
         def get_expression_type(self, ast_expr):
-            if type(ast_expr) is ast.Float:
-                return 'float'
-            elif type(ast_expr) is ast.Integer:
-                return 'int'
+            def get_expression_type_rec(node, types):
+                if type(node) is ast.Float:
+                    return ['float'] + types[:]
+                elif type(node) is ast.Integer:
+                    return ['int'] + types[:]
+                elif type(node) is ast.BinOp:
+                    return (get_expression_type_rec(node.left, types) +
+                            get_expression_type_rec(node.right, types))
+                else:
+                    return types
+
+            # make int coerce to float
+            return 'float' if any(
+                expr_type
+                for expr_type in get_expression_type_rec(ast_expr, [])
+                if expr_type == 'float'
+            ) else 'int'
 
     def typecheck(self, tree):
         error_report = TypecheckerReport()
@@ -33,14 +42,12 @@ class Typechecker:
                 id_type = symbol_table.get_id_type(node.id)
                 if expression_type != id_type:
                     error_report.add_error(node)
-                symbol_table.add_assignment(node)
             elif type(node) is ast.Declaration:
                 symbol_table.add_declaration(node)
 
         for node in tree.statements:
             typecheck_rec(node)
 
-        print(symbol_table.declarations, symbol_table.assignments)
         return error_report
 
 
