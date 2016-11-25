@@ -1,0 +1,46 @@
+import unittest
+from itertools import zip_longest
+
+from compiler.typechecker.typechecker import (Typechecker, TypecheckerError)
+import compiler.parser.ast as ast
+
+
+typechecker = Typechecker()
+
+
+class TestTypechecker(unittest.TestCase):
+    def test_simple_correct(self):
+        '''No errors with given program:
+           `int cowbell;
+            cowbell = 2000;`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('cowbell')]),
+            ast.Assignment(ast.ID('cowbell'), ast.Integer(2000))
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = []
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
+
+    def test_simple_error(self):
+        '''An error with given program:
+           `int cowbell;
+            cowbell = 2000.0;`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('cowbell')]),
+            ast.Assignment(ast.ID('cowbell'), ast.Float(2000.0))
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = [
+            TypecheckerError(
+                ast.Assignment(ast.ID('cowbell'), ast.Float(2000.0))
+            )
+        ]
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
