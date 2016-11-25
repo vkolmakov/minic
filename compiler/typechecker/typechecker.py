@@ -25,12 +25,19 @@ class SymbolTable:
     def __init__(self):
         self.declarations = {}  # str -> str, contains ids to types
 
-    def add_declaration(self, ast_declaration):
-        for ast_id in ast_declaration.ids:
-            self.declarations[ast_id.name] = ast_declaration.type
+    @staticmethod
+    def extract_id_name(ast_variable):
+        if type(ast_variable) is ast.ID:
+            return ast_variable.name
+        elif type(ast_variable) is ast.ArrayRef:
+            return ast_variable.id.name
 
-    def get_id_type(self, ast_id):
-        return self.declarations[ast_id.name]
+    def add_declaration(self, ast_declaration):
+        for ast_variable in ast_declaration.ids:
+            self.declarations[SymbolTable.extract_id_name(ast_variable)] = ast_declaration.type
+
+    def get_id_type(self, ast_variable):
+        return self.declarations[SymbolTable.extract_id_name(ast_variable)]
 
     def get_expression_type(self, ast_expr):
         def get_expression_type_rec(node, types):
