@@ -134,3 +134,54 @@ class TestTypechecker(unittest.TestCase):
 
         for (r, e) in zip_longest(report.get_errors(), expected_errors):
             assert r == e
+
+    def test_id_expr_correct(self):
+        '''No error with given program:
+           `int ducks, wildcats;
+            ducks = 100;
+            wildcats = 200 % ducks;`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('ducks'), ast.ID('wildcats')]),
+            ast.Assignment(ast.ID('ducks'), ast.Integer(100)),
+            ast.Assignment(
+                ast.ID('wildcats'),
+                ast.BinOp('%', ast.Integer(200), ast.ID('ducks'))
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = []
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
+
+    def test_id_expr_error(self):
+        '''No error with given program:
+           `int ducks;
+            float wildcats;
+            ducks = 100;
+            wildcats = 200 % ducks;`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('ducks')]),
+            ast.Declaration('float', [ast.ID('wildcats')]),
+            ast.Assignment(ast.ID('ducks'), ast.Integer(100)),
+            ast.Assignment(
+                ast.ID('wildcats'),
+                ast.BinOp('%', ast.Integer(200), ast.ID('ducks'))
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = [
+            TypecheckerError(
+                ast.Assignment(
+                    ast.ID('wildcats'),
+                    ast.BinOp('%', ast.Integer(200), ast.ID('ducks'))
+                )
+            )
+        ]
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
