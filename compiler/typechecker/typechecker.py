@@ -22,6 +22,8 @@ class Typechecker:
                 elif type(node) is ast.BinOp:
                     return (get_expression_type_rec(node.left, types) +
                             get_expression_type_rec(node.right, types))
+                elif type(node) is ast.UnaryOp:
+                    return get_expression_type_rec(node.expr, types)
                 else:
                     return types
 
