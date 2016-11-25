@@ -185,3 +185,48 @@ class TestTypechecker(unittest.TestCase):
 
         for (r, e) in zip_longest(report.get_errors(), expected_errors):
             assert r == e
+
+    def test_arrayref_expr_correct(self):
+        '''No error with given program:
+           `int x[3];
+            x[0] = 1;`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ArrayRef(ast.ID('x'), ast.Integer(3))]),
+            ast.Assignment(
+                ast.ArrayRef(ast.ID('x'), ast.Integer(0)),
+                ast.Integer(1)
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = []
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
+
+    def test_arrayref_expr_error(self):
+        '''An error with given program:
+           `int x[3];
+            x[0] = 1.0;`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ArrayRef(ast.ID('x'), ast.Integer(3))]),
+            ast.Assignment(
+                ast.ArrayRef(ast.ID('x'), ast.Integer(0)),
+                ast.Float(1)
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = [
+            TypecheckerError(
+                ast.Assignment(
+                    ast.ArrayRef(ast.ID('x'), ast.Integer(0)),
+                    ast.Float(1)
+                )
+            )
+        ]
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
