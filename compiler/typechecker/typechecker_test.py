@@ -89,3 +89,48 @@ class TestTypechecker(unittest.TestCase):
 
         for (r, e) in zip_longest(report.get_errors(), expected_errors):
             assert r == e
+
+    def test_unary_op_correct(self):
+        '''No errors with given program:
+           `int negative_cowbell;
+            negative_cowbell = -2000;`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('negative_cowbell')]),
+            ast.Assignment(
+                ast.ID('negative_cowbell'),
+                ast.UnaryOp('-', ast.Integer(2000))
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = []
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
+
+    def test_unary_op_error(self):
+        '''An error with given program:
+           `int negative_cowbell;
+            negative_cowbell = -2000.00;`'''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('negative_cowbell')]),
+            ast.Assignment(
+                ast.ID('negative_cowbell'),
+                ast.UnaryOp('-', ast.Float(2000.00))
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = [
+            TypecheckerError(
+                ast.Assignment(
+                    ast.ID('negative_cowbell'),
+                    ast.UnaryOp('-', ast.Float(2000.00))
+                )
+            )
+        ]
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
