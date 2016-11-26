@@ -41,6 +41,9 @@ class AstNode:
                        for attr in self.__dict__])  # somebody pls stop me
         )
 
+    def __str__(self):
+        return repr(self)
+
 
 class Block(AstNode):
     def __init__(self, statements):
@@ -51,6 +54,9 @@ class Block(AstNode):
 
     def __repr__(self):
         return 'Block(\n  {}\n)'.format('\n  '.join([s.__repr__() for s in self.statements]))
+
+    def __str__(self):
+        return repr(self)
 
 
 class Statement(AstNode):

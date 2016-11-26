@@ -79,6 +79,14 @@ class TypecheckerReport:
     def add_error(self, ast_node):
         self.errors += [TypecheckerError(ast_node)]
 
+    def __repr__(self):
+        return 'ErrorReport(\n{})\n'.format(
+            '\n  '.join(repr(error) for error in self.get_errors())
+        )
+
+    def __str__(self):
+        return repr(self)
+
 
 class TypecheckerError:
     def __init__(self, ast_node):
@@ -90,3 +98,9 @@ class TypecheckerError:
 
     def get_ast_node(self):
         return self.ast_node
+
+    def __repr__(self):
+        return repr(self.get_ast_node())
+
+    def __str__(self):
+        return repr(self)

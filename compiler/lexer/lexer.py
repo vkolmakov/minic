@@ -1,4 +1,6 @@
 from rply import LexerGenerator
+from itertools import tee
+
 from compiler.lexer.tokens import name_with_pattern
 
 
@@ -23,7 +25,8 @@ class Lexer:
 
 class TokenStream:
     def __init__(self, stream):
-        self.stream = stream
+        self._original_stream = stream
+        (self.stream,) = tee(self._original_stream, 1)
 
     def __next__(self):
         return next(self.stream)
@@ -31,3 +34,11 @@ class TokenStream:
     def __iter__(self):
         while self.stream:
             yield next(self)
+        (self.stream,) = tee(self._original_stream, 1)
+
+    def __repr__(self):
+        (self.stream, stream) = tee(self._original_stream, 2)
+        return '\n'.join(str(tok) for tok in stream)
+
+    def __str__(self):
+        return repr(self)
