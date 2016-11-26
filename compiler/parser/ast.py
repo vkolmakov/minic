@@ -34,6 +34,13 @@ class AstNode:
     def __ne__(self, other):
         return not (self == other)
 
+    def __repr__(self):
+        return '{}({})'.format(
+            str(type(self)).split('.')[-1][:-2],  # such wow
+            ', '.join(['{}={}'.format(attr, self.__getattribute__(attr))
+                       for attr in self.__dict__])  # somebody pls stop me
+        )
+
 
 class Block(AstNode):
     def __init__(self, statements):
@@ -41,6 +48,9 @@ class Block(AstNode):
 
     def getastlist(self):
         return self.statements
+
+    def __repr__(self):
+        return 'Block(\n  {}\n)'.format('\n  '.join([s.__repr__() for s in self.statements]))
 
 
 class Statement(AstNode):
