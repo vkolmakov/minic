@@ -2,6 +2,7 @@ import unittest
 from itertools import zip_longest
 from rply import Token
 
+import compiler.parser.ast as ast
 from compiler.compiler import Compiler
 
 
@@ -53,3 +54,53 @@ class CompilerTest(unittest.TestCase):
 
         for (r, e) in zip_longest(result, expected):
             assert r == e
+
+
+    def test_compiler_parse(self):
+        '''Can parse a simple program:'''
+        given = '''
+            float duck, goose, birds[2];
+            int wildcat;
+
+            duck = 1.0;
+            goose = -1;
+
+            wildcat = 1;
+
+            birds[0] = duck;
+
+            if (duck) {
+              birds[1] = goose;
+            } else {
+              birds[1] = wildcat;
+            }
+        '''
+
+        result = compiler.parse(given)
+
+        expected = ast.Block([
+            ast.Declaration(
+                'float',
+                [ast.ID('duck'), ast.ID('goose'), ast.ArrayRef(ast.ID('birds'), ast.Integer(2))]
+            ),
+            ast.Declaration('int', [ast.ID('wildcat')]),
+
+            ast.Assignment(ast.ID('duck'), ast.Float(1.0)),
+            ast.Assignment(ast.ID('goose'), ast.UnaryOp('-', ast.Integer(1))),
+
+            ast.Assignment(ast.ID('wildcat'), ast.Integer(1)),
+
+            ast.Assignment(ast.ArrayRef(ast.ID('birds'), ast.Integer(0)), ast.ID('duck')),
+
+            ast.IfStatement(
+                ast.ID('duck'),
+                ast.Block([
+                    ast.Assignment(ast.ArrayRef(ast.ID('birds'), ast.Integer(1)), ast.ID('goose'))
+                ]),
+                ast.Block([
+                    ast.Assignment(ast.ArrayRef(ast.ID('birds'), ast.Integer(1)), ast.ID('wildcat'))
+                ])
+            ),
+        ])
+
+        assert result == expected
