@@ -3,6 +3,7 @@ from itertools import zip_longest
 from rply import Token
 
 import compiler.parser.ast as ast
+from compiler.typechecker.typechecker import TypecheckerError
 from compiler.compiler import Compiler
 
 
@@ -55,7 +56,6 @@ class CompilerTest(unittest.TestCase):
         for (r, e) in zip_longest(result, expected):
             assert r == e
 
-
     def test_compiler_parse(self):
         '''Can parse a simple program:'''
         given = '''
@@ -104,3 +104,37 @@ class CompilerTest(unittest.TestCase):
         ])
 
         assert result == expected
+
+    def test_compiler_typecheck(self):
+        '''Can find errors in a simple program:'''
+        given = '''
+            float duck, goose, birds[2];
+            int wildcat;
+
+            duck = 1.0;
+            goose = -1;
+
+            wildcat = 1;
+
+            birds[0] = duck;
+
+            if (duck) {
+              birds[1] = goose;
+            } else {
+              birds[1] = wildcat;
+            }
+        '''
+
+        result = compiler.typecheck(given)
+
+        expected_errors = [
+            TypecheckerError(
+                ast.Assignment(ast.ID('goose'), ast.UnaryOp('-', ast.Integer(1))),
+            ),
+            TypecheckerError(
+                ast.Assignment(ast.ArrayRef(ast.ID('birds'), ast.Integer(1)), ast.ID('wildcat'))
+            )
+        ]
+
+        for (r, e) in zip_longest(result.get_errors(), expected_errors):
+            assert r == e
