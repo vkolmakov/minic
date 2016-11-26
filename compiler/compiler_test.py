@@ -4,10 +4,10 @@ from rply import Token
 
 import compiler.parser.ast as ast
 from compiler.typechecker.typechecker import TypecheckerError
-from compiler.compiler import Compiler
+from compiler.compiler import create_compiler
 
 
-compiler = Compiler()
+compiler = create_compiler()
 
 
 class CompilerTest(unittest.TestCase):
