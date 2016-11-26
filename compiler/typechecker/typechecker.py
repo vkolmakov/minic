@@ -80,7 +80,7 @@ class TypecheckerReport:
         self.errors += [TypecheckerError(ast_node)]
 
     def __repr__(self):
-        return 'ErrorReport(\n{})\n'.format(
+        return 'ErrorReport(\n  {}\n)\n'.format(
             '\n  '.join(repr(error) for error in self.get_errors())
         )
 

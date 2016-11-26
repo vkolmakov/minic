@@ -109,6 +109,7 @@ def expressions_productions(pg):
     @pg.production('expr : expr OR expr')
     @pg.production('expr : expr AND expr')
     @pg.production('expr : expr EQUAL_EQUAL expr')
+    @pg.production('expr : expr NOT_EQUAL expr')
     @pg.production('expr : expr GREATER expr')
     @pg.production('expr : expr GREATER_EQUAL expr')
     @pg.production('expr : expr SMALLER expr')

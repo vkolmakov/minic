@@ -5,9 +5,10 @@ from rply import Token
 import compiler.parser.ast as ast
 from compiler.typechecker.typechecker import TypecheckerError
 from compiler.compiler import create_compiler
+from compiler.utils import Logger
 
 
-compiler = create_compiler()
+compiler = create_compiler(Logger())
 
 
 class CompilerTest(unittest.TestCase):
