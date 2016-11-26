@@ -8,7 +8,7 @@ import compiler.parser.ast as ast
 typechecker = Typechecker()
 
 
-class TestTypechecker(unittest.TestCase):
+class TestTypecheckerExpressions(unittest.TestCase):
     def test_simple_correct(self):
         '''No errors with given program:
            `int cowbell;
@@ -285,6 +285,173 @@ class TestTypechecker(unittest.TestCase):
         expected_errors = [
             TypecheckerError(
                 ast.Assignment(ast.ID('x'), ast.Float(1.0))
+            )
+        ]
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
+
+
+class TestTypechecker(unittest.TestCase):
+    def test_simple_program_correct(self):
+        '''Can typecheck a simple program:
+           `int wildcat, animals[2];
+            float duck;
+
+            wildcat = 1;
+            duck = 1.0;
+
+            if(duck) {
+              animals[0] = wildcat;
+              animals[1] = 2;
+            } else {
+              animals[0] = 1;
+            }
+
+            duck = (duck + 2.5) * 33.0 / 2.0;
+            `
+        '''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('wildcat'), ast.ArrayRef(ast.ID('animals'), ast.Integer(2))]),
+            ast.Declaration('float', [ast.ID('duck')]),
+
+            ast.Assignment(ast.ID('wildcat'), ast.Integer(1)),
+            ast.Assignment(ast.ID('duck'), ast.Float(1.0)),
+
+            ast.IfStatement(
+                ast.ID('duck'),
+                ast.Block([
+                    ast.Assignment(
+                        ast.ArrayRef(ast.ID('animals'), ast.Integer(0)),
+                        ast.ID('wildcat')
+                    ),
+                    ast.Assignment(
+                        ast.ArrayRef(ast.ID('animals'), ast.Integer(1)),
+                        ast.Integer(2)
+                    )
+                ]),
+                ast.Block([
+                    ast.Assignment(
+                        ast.ArrayRef(ast.ID('animals'), ast.Integer(0)),
+                        ast.Integer(1)
+                    )
+                ])
+            ),
+
+            ast.Assignment(
+                ast.ID('duck'),
+                ast.BinOp(
+                    '/',
+                    ast.BinOp(
+                        '*',
+                        ast.BinOp('+', ast.ID('duck'), ast.Float(2.5)),
+                        ast.Float(33.0)
+                    ),
+                    ast.Float(2.0)
+                )
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = []
+
+        for (r, e) in zip_longest(report.get_errors(), expected_errors):
+            assert r == e
+
+    def test_simple_program_error(self):
+        '''Can typecheck a simple program:
+           `int wildcat, animals[2];
+            float duck;
+
+            wildcat = 1.0;
+            duck = 1;
+
+            if(duck) {
+              animals[0] = duck;
+              animals[1] = 2;
+            } else {
+              animals[0] = 1;
+            }
+
+            duck = (duck + 2) * 33.0 / 2.0;
+            `
+        '''
+
+        given = ast.Block([
+            ast.Declaration('int', [ast.ID('wildcat'), ast.ArrayRef(ast.ID('animals'), ast.Integer(2))]),
+            ast.Declaration('float', [ast.ID('duck')]),
+
+            ast.Assignment(ast.ID('wildcat'), ast.Float(1.0)),
+            ast.Assignment(ast.ID('duck'), ast.Integer(1)),
+
+            ast.IfStatement(
+                ast.ID('duck'),
+                ast.Block([
+                    ast.Assignment(
+                        ast.ArrayRef(ast.ID('animals'), ast.Integer(0)),
+                        ast.ID('duck')
+                    ),
+                    ast.Assignment(
+                        ast.ArrayRef(ast.ID('animals'), ast.Integer(1)),
+                        ast.Float(2.0)
+                    )
+                ]),
+                ast.Block([
+                    ast.Assignment(
+                        ast.ArrayRef(ast.ID('animals'), ast.Integer(0)),
+                        ast.Integer(1)
+                    )
+                ])
+            ),
+
+            ast.Assignment(
+                ast.ID('duck'),
+                ast.BinOp(
+                    '/',
+                    ast.BinOp(
+                        '*',
+                        ast.BinOp('+', ast.ID('duck'), ast.Integer(2)),
+                        ast.Float(33.0)
+                    ),
+                    ast.Float(2.0)
+                )
+            )
+        ])
+
+        report = typechecker.typecheck(given)
+        expected_errors = [
+            TypecheckerError(
+                ast.Assignment(ast.ID('wildcat'), ast.Float(1.0)),
+            ),
+            TypecheckerError(
+                ast.Assignment(ast.ID('duck'), ast.Integer(1)),
+            ),
+            TypecheckerError(
+                ast.Assignment(
+                    ast.ArrayRef(ast.ID('animals'), ast.Integer(0)),
+                    ast.ID('duck')
+                )
+            ),
+            TypecheckerError(
+                ast.Assignment(
+                    ast.ArrayRef(ast.ID('animals'), ast.Integer(1)),
+                    ast.Float(2.0)
+                )
+            ),
+            TypecheckerError(
+                ast.Assignment(
+                    ast.ID('duck'),
+                    ast.BinOp(
+                        '/',
+                        ast.BinOp(
+                            '*',
+                            ast.BinOp('+', ast.ID('duck'), ast.Integer(2)),
+                            ast.Float(33.0)
+                        ),
+                        ast.Float(2.0)
+                    )
+                )
             )
         ]
 
