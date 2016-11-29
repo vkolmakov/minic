@@ -1,4 +1,4 @@
-# CS440 project
+# minic
 
 A front-end for a compiler for a small subset of C. Written in [Python 3.5.2](https://www.python.org) with [rply](https://github.com/alex/rply)
 
