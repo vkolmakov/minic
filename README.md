@@ -82,7 +82,7 @@ Block(
 [2016-11-26 17:54:52.712749]-TYPECHECKER
 ****************************************
 ErrorReport(
-  Assignment(id=ID(name=x), expr=Float(value=1.0))
+  TypeError(Assignment(id=ID(name=x), expr=Float(value=1.0)))
 )
 
 *********************************

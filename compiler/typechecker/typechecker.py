@@ -100,7 +100,7 @@ class TypecheckerError:
         return self.ast_node
 
     def __repr__(self):
-        return repr(self.get_ast_node())
+        return 'TypeError({})'.format(repr(self.get_ast_node()))
 
     def __str__(self):
         return repr(self)
